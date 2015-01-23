@@ -6,7 +6,7 @@ import (
   "github.com/intervention-engine/ie/models"
   "github.com/intervention-engine/fhir/server"
   "gopkg.in/mgo.v2/bson"
-  "github.com/gorilla/sessions"
+  "github.com/goincremental/negroni-sessions"
   "encoding/gob"
   )
 

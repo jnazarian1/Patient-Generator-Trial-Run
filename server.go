@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/codegangsta/negroni"
+	"github.com/goincremental/negroni-sessions"
+	"github.com/goincremental/negroni-sessions/mongostore"
 	"github.com/intervention-engine/fhir/server"
 	"github.com/intervention-engine/ie/controllers"
 	"github.com/intervention-engine/ie/middleware"
@@ -63,7 +65,8 @@ func main() {
 	index := s.Router.Path("/index").Subrouter()
 	index.Methods("GET").Handler(negroni.New(negroni.HandlerFunc(controllers.IndexHandler)))
 
-	//Store = sessions.NewCookieStore([]byte(os.Getenv("KEY")))
+	store := mongostore.New([]byte("supersecretshhhhh"))
+	handlers := []negroni.Handler{sessions.Sessions("intervention-engine", store)}
 
 	s.Run()
 }
