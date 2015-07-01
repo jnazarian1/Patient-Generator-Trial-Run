@@ -390,62 +390,63 @@ end
 #An index is then chosen randomly, therefore randomizing the conditions given to each patient
 #If medication_id == 0, then there is no medication for that condition
 #mortalityChance is out of 100 of dying from that disease after being diagnosed
+#The healOrDeath field identifies conditions that are either cured or cause death (such as pneumonia or influenza) when it is not likely/possible for the disease to just linger for a long period of time
 conditionRepository = [
-  {condition_id: 1, icd9code: "401.9",   display: "Hypertension",                    medication_id: 8,  overnights: "0",     abatementChance: 40,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #You can't die from hypertension, you die fromthe conditions hypertension causes
-  {condition_id: 2, icd9code: "250.00",  display: "Diabetes",                        medication_id: 4,  overnights: "1-2",   abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #I couldn't find a death rate above like .01% anywhere but I can keep looking, also I know Diabetes can cause other conditions that may need surgery, but surgery is not done to cure diabetes
-  {condition_id: 3, icd9code: "290.0",   display: "Dementia",                        medication_id: 1,  overnights: "0",     abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #I know dementia can cause other conditions that may need surgery, but surgery is not done to cure dementia
-  {condition_id: 4, icd9code: "482.9",   display: "Bacterial Pneumonia",             medication_id: 2,  overnights: "4-6",   abatementChance: 85,  mortalityChance: 12, mortalityTime: "threeWeeks",   recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 5, icd9code: "428.0",   display: "Congestive Heart Failure",        medication_id: 3,  overnights: "5-7",   abatementChance: 20,  mortalityChance: 40, mortalityTime: "fourYears",    recoveryEstimate: "sixMonths",   procedureChance: 80, procedureSuccess: 60, procedureDescription: "Surgery to remove blockages from cardiovascular arteries and/or valves"             },
-  {condition_id: 6, icd9code: "365.72",  display: "Glaucoma",                        medication_id: 5,  overnights: "0",     abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 80, procedureSuccess: 0,  procedureDescription: "Laser eye surgery to reduce intraocular pressure"                                   },
-  {condition_id: 7, icd9code: "711.90",  display: "Arthritis",                       medication_id: 6,  overnights: "0",     abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 8, icd9code: "487.8",   display: "Influenza",                       medication_id: 7,  overnights: "3-4",   abatementChance: 85,  mortalityChance: 5,  mortalityTime: "threeWeeks",   recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 9, icd9code: "733.01",  display: "Osteoporosis",                    medication_id: 9,  overnights: "0",     abatementChance: 0,   mortalityChance: 5,  mortalityTime: "sevenYears",                                    procedureChance: 20, procedureSuccess: 0,  procedureDescription: "Surgery to reposition broken bone"                                                  }, #Double check
-  {condition_id: 10, icd9code: "466.0",  display: "Chronic Bronchitis",              medication_id: 18, overnights: "4-6",   abatementChance: 40,  mortalityChance: 40, mortalityTime: "fourYears",    recoveryEstimate: "week",        procedureChance: 10, procedureSuccess: 20, procedureDescription: "Surgery to remove damaged lung tissue"                                              },
-  {condition_id: 11, icd9code: "389.9",  display: "Hearing Loss",                    medication_id: 0,  overnights: "0",     abatementChance: 75,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 20, procedureSuccess: 80, procedureDescription: "Surgery to remove blockages obstructing ear canal"                                  },
-  {condition_id: 12, icd9code: "535.00", display: "Gastritis",                       medication_id: 12, overnights: "3-4",   abatementChance: 70,  mortalityChance: 3,  mortalityTime: "twoYears",     recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #Double check if surgery can actually be helpful
-  {condition_id: 13, icd9code: "244.9",  display: "Hypothyroidism",                  medication_id: 13, overnights: "0",     abatementChance: 40,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 5,  procedureSuccess: 30, procedureDescription: "Surgery to remove parts or all of the thyroid"                                      }, #You can't die from Hypothyroidism, you can die from the complicaitons it causes
-  {condition_id: 14, icd9code: "285.9",  display: "Anemia",                          medication_id: 14, overnights: "4-5",   abatementChance: 85,  mortalityChance: 5,  mortalityTime: "twoYears",     recoveryEstimate: "sixMonths",   procedureChance: 25, procedureSuccess: 80, procedureDescription: "Blood transfusion and stem cell transplant"                                         }, #Double check
-  {condition_id: 15, icd9code: "492.8",  display: "Emphysema",                       medication_id: 15, overnights: "3-5",   abatementChance: 0,   mortalityChance: 30, mortalityTime: "fourYears",                                     procedureChance: 20, procedureSuccess: 0,  procedureDescription: "Lung volume reduction surgery"                                                      },
-  {condition_id: 16, icd9code: "533.30", display: "Peptic Ulcer",                    medication_id: 16, overnights: "6-7",   abatementChance: 80,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 5,  procedureSuccess: 50, procedureDescription: "Widening/removing part of the stomach"                                              },
-  {condition_id: 17, icd9code: "554.1",  display: "Varicose Veins",                  medication_id: 17, overnights: "5-7",   abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 18, icd9code: "362.50", display: "Macular Degeneration",            medication_id: 10, overnights: "0",     abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 5,  procedureSuccess: 0,  procedureDescription: "Implanted miniature telescope in the patient's eye"                                 },
-  {condition_id: 19, icd9code: "274.9",  display: "Gout",                            medication_id: 19, overnights: "4-6",   abatementChance: 90,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 5,  procedureSuccess: 80, procedureDescription: "Joint replacement and uric acid crystal removal"                                    },
-  {condition_id: 20, icd9code: "564.00", display: "Constipation",                    medication_id: 20, overnights: "0",     abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 21, icd9code: "440.9",  display: "Athersclerosis",                  medication_id: 8,  overnights: "3-5",   abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 25, procedureSuccess: 0,  procedureDescription: "Surgery to remove plaque from arterial walls"                                       }, #Double check
-  {condition_id: 22, icd9code: "416.9",  display: "Pulmonary Heart Disease",         medication_id: 8,  overnights: "5-7",   abatementChance: 30,  mortalityChance: 15, mortalityTime: "twoYears",     recoveryEstimate: "sixMonths",   procedureChance: 15, procedureSuccess: 30, procedureDescription: "Surgery to remove blockages and/or clots in the pulmonary system"                   }, #Double check
-  {condition_id: 23, icd9code: "530.81", display: "Esophageal Reflux",               medication_id: 16, overnights: "0",     abatementChance: 70,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 30, procedureSuccess: 90, procedureDescription: "Laparoscopic surgery to reinforce the passage between the esophagus and the stomach"}, #Double check
-  {condition_id: 24, icd9code: "003.9",  display: "Salmonella",                      medication_id: 21, overnights: "3-5",   abatementChance: 85,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 25, icd9code: "011.90", display: "Pulmonary Tuberculosis",          medication_id: 22, overnights: "15-20", abatementChance: 80,  mortalityChance: 20, mortalityTime: "threeWeeks",   recoveryEstimate: "sixMonths",   procedureChance: 10, procedureSuccess: 30, procedureDescription: "Surgery to remove pocket(s) of bacteria and repair lung damage"                     },
-  {condition_id: 26, icd9code: "265.0",  display: "Beriberi",                        medication_id: 23, overnights: "0",     abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 27, icd9code: "377.75", display: "Cortical Blindness",              medication_id: 0,  overnights: "1-3",   abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 28, icd9code: "733.20", display: "Bone Cyst",                       medication_id: 0,  overnights: "4-6",   abatementChance: 90,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 10, procedureSuccess: 90, procedureDescription: "Drained cyst and filled hole with bone chips from other locations tihin the patient"},
-  {condition_id: 28, icd9code: "814.00", display: "Carpal Bone Fracture",            medication_id: 0,  overnights: "0-1",   abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 40, procedureSuccess: 90, procedureDescription: "Reset the bone and applied a cast"                                                  },
-  {condition_id: 29, icd9code: "825.20", display: "Foot Fracture",                   medication_id: 0,  overnights: "0-1",   abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 40, procedureSuccess: 90, procedureDescription: "Reset the bone and applied a cast"                                                  },
-  {condition_id: 30, icd9code: "873.63", display: "Broken Tooth",                    medication_id: 0,  overnights: "0-1",   abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 20, procedureSuccess: 85, procedureDescription: "Root canal"                                                                         },
-  {condition_id: 31, icd9code: "541",    display: "Appendicitis",                    medication_id: 0,  overnights: "3-4",   abatementChance: 100, mortalityChance: 3,  mortalityTime: "threeWeeks",   recoveryEstimate: "week",        procedureChance: 95, procedureSuccess: 90, procedureDescription: "Appendectomy"                                                                       },
-  {condition_id: 32, icd9code: "943.01", display: "Forearm Burn",                    medication_id: 0,  overnights: "0-2",   abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 33, icd9code: "945.06", display: "Thigh Burn",                      medication_id: 0,  overnights: "2-4",   abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 34, icd9code: "004.2",  display: "Shigella",                        medication_id: 0,  overnights: "4-5",   abatementChance: 90,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 35, icd9code: "023.9",  display: "Brucellosis",                     medication_id: 24, overnights: "10-15", abatementChance: 85,  mortalityChance: 2,  mortalityTime: "threeWeeks",   recoveryEstimate: "sixMonths",   procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 36, icd9code: "033.0",  display: "Whooping Cough (B. Pertussis)",   medication_id: 25, overnights: "3-4",   abatementChance: 100,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 37, icd9code: "081.9",  display: "Typhus",                          medication_id: 2,  overnights: "3-9",   abatementChance: 85,  mortalityChance: 30, mortalityTime: "threeWeeks",   recoveryEstimate: "threeMonths", procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 38, icd9code: "072.9",  display: "Mumps",                           medication_id: 0,  overnights: "3-5",   abatementChance: 95,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 39, icd9code: "272.4",  display: "Hyperlipidemia",                  medication_id: 11, overnights: "0",     abatementChance: 70,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 20, procedureSuccess: 95, procedureDescription: "Gastric Bypass Surgery"                                                             }, #Double check
-  {condition_id: 40, icd9code: "781.1",  display: "Disturbances of Smell and Taste", medication_id: 11, overnights: "0",     abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 60, procedureSuccess: 75, procedureDescription: "Surgery to restore sensory pathways involving smell and taste"                      },
-  {condition_id: 41, icd9code: "162.9",  display: "Lung Cancer",                     medication_id: 29, overnights: "5-7",   abatementChance: 15,  mortalityChance: 70, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 40, procedureSuccess: 20, procedureDescription: "Surgery to remove tumors in the thoracic cavity"                                    },
-  {condition_id: 42, icd9code: "153.9",  display: "Colon Cancer",                    medication_id: 30, overnights: "8-10",  abatementChance: 70,  mortalityChance: 50, mortalityTime: "twoyears",     recoveryEstimate: "threeYears",  procedureChance: 70, procedureSuccess: 60, procedureDescription: "Surgery to remove a cancerous portion of the colon"                                 },
-  {condition_id: 43, icd9code: "172.9",  display: "Skin Cancer (Melanoma)",          medication_id: 31, overnights: "4-6",   abatementChance: 95,  mortalityChance: 20, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 75, procedureSuccess: 98, procedureDescription: "Mohs surgery (a form of skin grafting to replace cancerous skin cells)"             },
-  {condition_id: 44, icd9code: "585.3",  display: "Chronic Kidney Disease",          medication_id: 0,  overnights: "3-5",   abatementChance: 0,   mortalityChance: 20, mortalityTime: "sevenYears",                                    procedureChance: 10, procedureSuccess: 0,  procedureDescription: "Kidney Transplant"                                                                  },
-  {condition_id: 45, icd9code: "155.2",  display: "Liver Cancer",                    medication_id: 32, overnights: "6-8",   abatementChance: 25,  mortalityChance: 85, mortalityTime: "fourYears",    recoveryEstimate: "threeYears",  procedureChance: 25, procedureSuccess: 40, procedureDescription: "Surgery to remove a cancerous portion of the liver"                                 },
-  {condition_id: 46, icd9code: "478.9",  display: "Upper Respiratory Tract Disease", medication_id: 15, overnights: "0-1",   abatementChance: 90,  mortalityChance: 2,  mortalityTime: "threeWeeks",   recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #There may be surgery for this one
-  {condition_id: 47, icd9code: "571.5",  display: "Cirrhosis of Liver",              medication_id: 33, overnights: "3-5",   abatementChance: 0,   mortalityChance: 40, mortalityTime: "twoYears",                                      procedureChance: 20, procedureSuccess: 50, procedureDescription: "Liver transplant"                                                                   },
-  {condition_id: 48, icd9code: "117.3",  display: "Aspergillosis",                   medication_id: 34, overnights: "20-30", abatementChance: 50,  mortalityChance: 60, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 10, procedureSuccess: 40, procedureDescription: "Surgery to drain and/or remove lung mass"                                           },
-  {condition_id: 49, icd9code: "136.0",  display: "Ainhum",                          medication_id: 0,  overnights: "0",     abatementChance: 0,   mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 60, procedureSuccess: 30, procedureDescription: "Toe amputation"                                                                     },
-  {condition_id: 50, icd9code: "266.0",  display: "Ariboflavinosis",                 medication_id: 0,  overnights: "0",     abatementChance: 100, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
-  {condition_id: 51, icd9code: "276.2",  display: "Acidosis",                        medication_id: 35, overnights: "0-1",   abatementChance: 90,  mortalityChance: 5,  mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #Double check
-  {condition_id: 52, icd9code: "571.2",  display: "Alcoholic Cirrhosis of Liver",    medication_id: 33, overnights: "5-7",   abatementChance: 0,   mortalityChance: 40, mortalityTime: "twoYears",                                      procedureChance: 10, procedureSuccess: 50, procedureDescription: "Liver transplant"                                                                   },
-  {condition_id: 53, icd9code: "185",    display: "Prostate Cancer",                 medication_id: 27, overnights: "2-4",   abatementChance: 90,  mortalityChance: 19, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 75, procedureSuccess: 98, procedureDescription: "Radical Prostatectomy"                                                              },
-  {condition_id: 54, icd9code: "174.9",  display: "Breast Cancer",                   medication_id: 28, overnights: "2-3",   abatementChance: 40,  mortalityChance: 24, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 60, procedureSuccess: 60, procedureDescription: "Surgery to remove part or all of a cancerous breast"                                }
+  {condition_id: 1, icd9code: "401.9",   display: "Hypertension",                    medication_id: 8,  overnights: "0",     abatementChance: 40,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #You can't die from hypertension, you die fromthe conditions hypertension causes
+  {condition_id: 2, icd9code: "250.00",  display: "Diabetes",                        medication_id: 4,  overnights: "1-2",   abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #I couldn't find a death rate above like .01% anywhere but I can keep looking, also I know Diabetes can cause other conditions that may need surgery, but surgery is not done to cure diabetes
+  {condition_id: 3, icd9code: "290.0",   display: "Dementia",                        medication_id: 1,  overnights: "0",     abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #I know dementia can cause other conditions that may need surgery, but surgery is not done to cure dementia
+  {condition_id: 4, icd9code: "482.9",   display: "Bacterial Pneumonia",             medication_id: 2,  overnights: "4-6",   abatementChance: 100, healOrDeath: true,  mortalityChance: 12, mortalityTime: "threeWeeks",   recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 5, icd9code: "428.0",   display: "Congestive Heart Failure",        medication_id: 3,  overnights: "5-7",   abatementChance: 20,  healOrDeath: false, mortalityChance: 40, mortalityTime: "fourYears",    recoveryEstimate: "sixMonths",   procedureChance: 80, procedureSuccess: 60, procedureDescription: "Surgery to remove blockages from cardiovascular arteries and/or valves"             },
+  {condition_id: 6, icd9code: "365.72",  display: "Glaucoma",                        medication_id: 5,  overnights: "0",     abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 80, procedureSuccess: 0,  procedureDescription: "Laser eye surgery to reduce intraocular pressure"                                   },
+  {condition_id: 7, icd9code: "711.90",  display: "Arthritis",                       medication_id: 6,  overnights: "0",     abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 8, icd9code: "487.8",   display: "Influenza",                       medication_id: 7,  overnights: "3-4",   abatementChance: 100, healOrDeath: true,  mortalityChance: 5,  mortalityTime: "threeWeeks",   recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 9, icd9code: "733.01",  display: "Osteoporosis",                    medication_id: 9,  overnights: "0",     abatementChance: 0,   healOrDeath: false, mortalityChance: 5,  mortalityTime: "sevenYears",                                    procedureChance: 20, procedureSuccess: 0,  procedureDescription: "Surgery to reposition broken bone"                                                  }, #Double check
+  {condition_id: 10, icd9code: "466.0",  display: "Chronic Bronchitis",              medication_id: 18, overnights: "4-6",   abatementChance: 40,  healOrDeath: false, mortalityChance: 40, mortalityTime: "fourYears",    recoveryEstimate: "week",        procedureChance: 10, procedureSuccess: 20, procedureDescription: "Surgery to remove damaged lung tissue"                                              },
+  {condition_id: 11, icd9code: "389.9",  display: "Hearing Loss",                    medication_id: 0,  overnights: "0",     abatementChance: 75,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 20, procedureSuccess: 80, procedureDescription: "Surgery to remove blockages obstructing ear canal"                                  },
+  {condition_id: 12, icd9code: "535.00", display: "Gastritis",                       medication_id: 12, overnights: "3-4",   abatementChance: 70,  healOrDeath: false, mortalityChance: 3,  mortalityTime: "twoYears",     recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #Double check if surgery can actually be helpful
+  {condition_id: 13, icd9code: "244.9",  display: "Hypothyroidism",                  medication_id: 13, overnights: "0",     abatementChance: 40,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 5,  procedureSuccess: 30, procedureDescription: "Surgery to remove parts or all of the thyroid"                                      }, #You can't die from Hypothyroidism, you can die from the complicaitons it causes
+  {condition_id: 14, icd9code: "285.9",  display: "Anemia",                          medication_id: 14, overnights: "4-5",   abatementChance: 80,  healOrDeath: false, mortalityChance: 5,  mortalityTime: "twoYears",     recoveryEstimate: "sixMonths",   procedureChance: 25, procedureSuccess: 80, procedureDescription: "Blood transfusion and stem cell transplant"                                         }, #Double check
+  {condition_id: 15, icd9code: "492.8",  display: "Emphysema",                       medication_id: 15, overnights: "3-5",   abatementChance: 0,   healOrDeath: false, mortalityChance: 30, mortalityTime: "fourYears",                                     procedureChance: 20, procedureSuccess: 0,  procedureDescription: "Lung volume reduction surgery"                                                      },
+  {condition_id: 16, icd9code: "533.30", display: "Peptic Ulcer",                    medication_id: 16, overnights: "6-7",   abatementChance: 80,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 5,  procedureSuccess: 50, procedureDescription: "Widening/removing part of the stomach"                                              },
+  {condition_id: 17, icd9code: "554.1",  display: "Varicose Veins",                  medication_id: 17, overnights: "5-7",   abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 18, icd9code: "362.50", display: "Macular Degeneration",            medication_id: 10, overnights: "0",     abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 5,  procedureSuccess: 0,  procedureDescription: "Implanted miniature telescope in the patient's eye"                                 },
+  {condition_id: 19, icd9code: "274.9",  display: "Gout",                            medication_id: 19, overnights: "4-6",   abatementChance: 90,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 5,  procedureSuccess: 80, procedureDescription: "Joint replacement and uric acid crystal removal"                                    },
+  {condition_id: 20, icd9code: "564.00", display: "Constipation",                    medication_id: 20, overnights: "0",     abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 21, icd9code: "440.9",  display: "Athersclerosis",                  medication_id: 8,  overnights: "3-5",   abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 25, procedureSuccess: 0,  procedureDescription: "Surgery to remove plaque from arterial walls"                                       }, #Double check
+  {condition_id: 22, icd9code: "416.9",  display: "Pulmonary Heart Disease",         medication_id: 8,  overnights: "5-7",   abatementChance: 30,  healOrDeath: false, mortalityChance: 15, mortalityTime: "twoYears",     recoveryEstimate: "sixMonths",   procedureChance: 15, procedureSuccess: 30, procedureDescription: "Surgery to remove blockages and/or clots in the pulmonary system"                   }, #Double check
+  {condition_id: 23, icd9code: "530.81", display: "Esophageal Reflux",               medication_id: 16, overnights: "0",     abatementChance: 70,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 30, procedureSuccess: 90, procedureDescription: "Laparoscopic surgery to reinforce the passage between the esophagus and the stomach"}, #Double check
+  {condition_id: 24, icd9code: "003.9",  display: "Salmonella",                      medication_id: 21, overnights: "3-5",   abatementChance: 100, healOrDeath: true,  mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 25, icd9code: "011.90", display: "Pulmonary Tuberculosis",          medication_id: 22, overnights: "15-20", abatementChance: 80,  healOrDeath: false, mortalityChance: 20, mortalityTime: "threeWeeks",   recoveryEstimate: "sixMonths",   procedureChance: 10, procedureSuccess: 30, procedureDescription: "Surgery to remove pocket(s) of bacteria and repair lung damage"                     },
+  {condition_id: 26, icd9code: "265.0",  display: "Beriberi",                        medication_id: 23, overnights: "0",     abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 27, icd9code: "377.75", display: "Cortical Blindness",              medication_id: 0,  overnights: "1-3",   abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 28, icd9code: "733.20", display: "Bone Cyst",                       medication_id: 0,  overnights: "4-6",   abatementChance: 90,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 10, procedureSuccess: 90, procedureDescription: "Drained cyst and filled hole with bone chips from other locations tihin the patient"},
+  {condition_id: 28, icd9code: "814.00", display: "Carpal Bone Fracture",            medication_id: 0,  overnights: "0-1",   abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 40, procedureSuccess: 90, procedureDescription: "Reset the bone and applied a cast"                                                  },
+  {condition_id: 29, icd9code: "825.20", display: "Foot Fracture",                   medication_id: 0,  overnights: "0-1",   abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 40, procedureSuccess: 90, procedureDescription: "Reset the bone and applied a cast"                                                  },
+  {condition_id: 30, icd9code: "873.63", display: "Broken Tooth",                    medication_id: 0,  overnights: "0-1",   abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 20, procedureSuccess: 85, procedureDescription: "Root canal"                                                                         },
+  {condition_id: 31, icd9code: "541",    display: "Appendicitis",                    medication_id: 0,  overnights: "3-4",   abatementChance: 100, healOrDeath: true,  mortalityChance: 3,  mortalityTime: "threeWeeks",   recoveryEstimate: "week",        procedureChance: 95, procedureSuccess: 90, procedureDescription: "Appendectomy"                                                                       },
+  {condition_id: 32, icd9code: "943.01", display: "Forearm Burn",                    medication_id: 0,  overnights: "0-2",   abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 33, icd9code: "945.06", display: "Thigh Burn",                      medication_id: 0,  overnights: "2-4",   abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 34, icd9code: "004.2",  display: "Shigella",                        medication_id: 0,  overnights: "4-5",   abatementChance: 90,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 35, icd9code: "023.9",  display: "Brucellosis",                     medication_id: 24, overnights: "10-15", abatementChance: 100, healOrDeath: true,  mortalityChance: 2,  mortalityTime: "threeWeeks",   recoveryEstimate: "sixMonths",   procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 36, icd9code: "033.0",  display: "Whooping Cough (B. Pertussis)",   medication_id: 25, overnights: "3-4",   abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",       procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 37, icd9code: "081.9",  display: "Typhus",                          medication_id: 2,  overnights: "3-9",   abatementChance: 100, healOrDeath: true, mortalityChance: 30, mortalityTime: "threeWeeks",   recoveryEstimate: "threeMonths", procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 38, icd9code: "072.9",  display: "Mumps",                           medication_id: 0,  overnights: "3-5",   abatementChance: 95,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 39, icd9code: "272.4",  display: "Hyperlipidemia",                  medication_id: 11, overnights: "0",     abatementChance: 70,  healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 20, procedureSuccess: 95, procedureDescription: "Gastric Bypass Surgery"                                                             }, #Double check
+  {condition_id: 40, icd9code: "781.1",  display: "Disturbances of Smell and Taste", medication_id: 11, overnights: "0",     abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "sixMonths",   procedureChance: 60, procedureSuccess: 75, procedureDescription: "Surgery to restore sensory pathways involving smell and taste"                      },
+  {condition_id: 41, icd9code: "162.9",  display: "Lung Cancer",                     medication_id: 29, overnights: "5-7",   abatementChance: 15,  healOrDeath: false, mortalityChance: 70, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 40, procedureSuccess: 20, procedureDescription: "Surgery to remove tumors in the thoracic cavity"                                    },
+  {condition_id: 42, icd9code: "153.9",  display: "Colon Cancer",                    medication_id: 30, overnights: "8-10",  abatementChance: 70,  healOrDeath: false, mortalityChance: 50, mortalityTime: "twoyears",     recoveryEstimate: "threeYears",  procedureChance: 70, procedureSuccess: 60, procedureDescription: "Surgery to remove a cancerous portion of the colon"                                 },
+  {condition_id: 43, icd9code: "172.9",  display: "Skin Cancer (Melanoma)",          medication_id: 31, overnights: "4-6",   abatementChance: 95,  healOrDeath: false, mortalityChance: 20, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 75, procedureSuccess: 98, procedureDescription: "Mohs surgery (a form of skin grafting to replace cancerous skin cells)"             },
+  {condition_id: 44, icd9code: "585.3",  display: "Chronic Kidney Disease",          medication_id: 0,  overnights: "3-5",   abatementChance: 0,   healOrDeath: false, mortalityChance: 20, mortalityTime: "sevenYears",                                    procedureChance: 10, procedureSuccess: 0,  procedureDescription: "Kidney Transplant"                                                                  },
+  {condition_id: 45, icd9code: "155.2",  display: "Liver Cancer",                    medication_id: 32, overnights: "6-8",   abatementChance: 25,  healOrDeath: false, mortalityChance: 85, mortalityTime: "fourYears",    recoveryEstimate: "threeYears",  procedureChance: 25, procedureSuccess: 40, procedureDescription: "Surgery to remove a cancerous portion of the liver"                                 },
+  {condition_id: 46, icd9code: "478.9",  display: "Upper Respiratory Tract Disease", medication_id: 15, overnights: "0-1",   abatementChance: 90,  healOrDeath: false, mortalityChance: 2,  mortalityTime: "threeWeeks",   recoveryEstimate: "week",        procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #There may be surgery for this one
+  {condition_id: 47, icd9code: "571.5",  display: "Cirrhosis of Liver",              medication_id: 33, overnights: "3-5",   abatementChance: 0,   healOrDeath: false, mortalityChance: 40, mortalityTime: "twoYears",                                      procedureChance: 20, procedureSuccess: 50, procedureDescription: "Liver transplant"                                                                   },
+  {condition_id: 48, icd9code: "117.3",  display: "Aspergillosis",                   medication_id: 34, overnights: "20-30", abatementChance: 50,  healOrDeath: false, mortalityChance: 60, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 10, procedureSuccess: 40, procedureDescription: "Surgery to drain and/or remove lung mass"                                           },
+  {condition_id: 49, icd9code: "136.0",  display: "Ainhum",                          medication_id: 0,  overnights: "0",     abatementChance: 0,   healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",                                           procedureChance: 60, procedureSuccess: 30, procedureDescription: "Toe amputation"                                                                     },
+  {condition_id: 50, icd9code: "266.0",  display: "Ariboflavinosis",                 medication_id: 0,  overnights: "0",     abatementChance: 100, healOrDeath: false, mortalityChance: 0,  mortalityTime: "N/A",          recoveryEstimate: "threeMonths", procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                },
+  {condition_id: 51, icd9code: "276.2",  display: "Acidosis",                        medication_id: 35, overnights: "0-1",   abatementChance: 90,  healOrDeath: false, mortalityChance: 5,  mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 0,  procedureSuccess: 0,  procedureDescription: "N/A"                                                                                }, #Double check
+  {condition_id: 52, icd9code: "571.2",  display: "Alcoholic Cirrhosis of Liver",    medication_id: 33, overnights: "5-7",   abatementChance: 0,   healOrDeath: false, mortalityChance: 40, mortalityTime: "twoYears",                                      procedureChance: 10, procedureSuccess: 50, procedureDescription: "Liver transplant"                                                                   },
+  {condition_id: 53, icd9code: "185",    display: "Prostate Cancer",                 medication_id: 27, overnights: "2-4",   abatementChance: 90,  healOrDeath: false, mortalityChance: 19, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 75, procedureSuccess: 98, procedureDescription: "Radical Prostatectomy"                                                              },
+  {condition_id: 54, icd9code: "174.9",  display: "Breast Cancer",                   medication_id: 28, overnights: "2-3",   abatementChance: 40,  healOrDeath: false, mortalityChance: 24, mortalityTime: "twoYears",     recoveryEstimate: "threeYears",  procedureChance: 60, procedureSuccess: 60, procedureDescription: "Surgery to remove part or all of a cancerous breast"                                }
 ]
 
 #This code creates a condition then chooses a random index that dictates which condition in the repository is assigned
@@ -652,30 +653,56 @@ recoveryEstimateVar = conditionRepository[conditionIndex][:recoveryEstimate]
 
 #This block of code determines the asserted and abatement dates of the condition
 mockCondition.dateAsserted = dateAssertedVar
-abatementChanceVar = rand(1..99)
-if conditionRepository[conditionIndex][:abatementChance] > abatementChanceVar
-  if recoveryEstimateVar == "threeYears"
-    abatementDateVar = dateAssertedVar + rand(2..4).years + rand(0..11).months + rand(0..27).days
-  elsif recoveryEstimateVar == "sixMonths"
-    abatementDateVar = dateAssertedVar + rand(5..7).months + rand(0..20).days
-  elsif recoveryEstimateVar == "threeMonths"
-    abatementDateVar = dateAssertedVar + rand(2..3).months + rand(0..20).days
-  elsif recoveryEstimateVar == "week"
-    abatementDateVar = dateAssertedVar + rand(6..10).days
-  else
-    return "Error: Recovery Estimate for this condition is not supported"
+
+#The 'if' portion of this 'if/else' statement is for conditions that aer either cured are cause immenent death (such as pneumonia)
+if conditionRepository[conditionIndex][:healOrDeath] == true
+  if mockPatient.deceasedBoolean == false
+    if recoveryEstimateVar == "threeYears"
+      abatementDateVar = dateAssertedVar + rand(2..4).years + rand(0..11).months + rand(0..27).days
+    elsif recoveryEstimateVar == "sixMonths"
+      abatementDateVar = dateAssertedVar + rand(5..7).months + rand(0..20).days
+    elsif recoveryEstimateVar == "threeMonths"
+      abatementDateVar = dateAssertedVar + rand(2..3).months + rand(0..20).days
+    elsif recoveryEstimateVar == "week"
+      abatementDateVar = dateAssertedVar + rand(6..10).days
+    end
+    if abatementDateVar > Date.today
+      mockCondition.abatementBoolean = false
+#      #Check This Tomorrow ######################################################################################################################################
+#    elsif abatementDateVar.to_s > mockPatient.deceasedDateTime.to_s
+#      mockCondition.abatementBoolean = false
+    else
+      mockCondition.abatementBoolean = true
+      mockCondition.abatementDate = abatementDateVar
+    end
   end
-  #The following code ensures that a condition does not have an abatement date in the future or after the patient's deceased date
-  if abatementDateVar > Date.today
-    mockCondition.abatementBoolean = false
-  elsif abatementDateVar.to_s > mockPatient.deceasedDateTime.to_s
-    mockCondition.abatementBoolean = false
-  else
-    mockCondition.abatementBoolean = true
-    mockCondition.abatementDate = abatementDateVar
-  end
+#The 'else' portion is for all other conditions that can linger without causing death (most chronic conditions)
 else
-  mockCondition.abatementBoolean = false
+  abatementChanceVar = rand(1..99)
+  if conditionRepository[conditionIndex][:abatementChance] > abatementChanceVar
+    if recoveryEstimateVar == "threeYears"
+      abatementDateVar = dateAssertedVar + rand(2..4).years + rand(0..11).months + rand(0..27).days
+    elsif recoveryEstimateVar == "sixMonths"
+      abatementDateVar = dateAssertedVar + rand(5..7).months + rand(0..20).days
+    elsif recoveryEstimateVar == "threeMonths"
+      abatementDateVar = dateAssertedVar + rand(2..3).months + rand(0..20).days
+    elsif recoveryEstimateVar == "week"
+      abatementDateVar = dateAssertedVar + rand(6..10).days
+    else
+      return "Error: Recovery Estimate for this condition is not supported"
+    end
+  #The following code ensures that a condition does not have an abatement date in the future or after the patient's deceased date
+    if abatementDateVar > Date.today
+      mockCondition.abatementBoolean = false
+    elsif abatementDateVar.to_s > mockPatient.deceasedDateTime.to_s
+      mockCondition.abatementBoolean = false
+    else
+      mockCondition.abatementBoolean = true
+      mockCondition.abatementDate = abatementDateVar
+    end
+  else
+    mockCondition.abatementBoolean = false
+  end
 end
 
 
@@ -906,7 +933,7 @@ medicationRepository = [
 
 
 
-#MedicationStatment####################################################################################################################################################################################################################################################################################################
+#MedicationStatement####################################################################################################################################################################################################################################################################################################
 ########################################################################################################################################################################################################################################################################################################################
 def createMedicationStatement()
   newMedicationStatement = FHIR::MedicationStatement.new()
@@ -1076,12 +1103,6 @@ else
   patientDiastolicBloodPressure.issued = allExtraEncounters[rand(allExtraEncounters.count-1)].period.start + rand(10..14).hours + rand(0..59).minutes
 end
 
-
-
-
-
-
-
 #This code dictates whether or not the patient record is active based on if they are deceased or not
 if mockPatient.deceasedBoolean == true
   mockPatient.active = false
@@ -1090,6 +1111,164 @@ if mockPatient.deceasedBoolean == true
 else
   mockPatient.active = true
 end
+
+
+
+#This code writes the patient profile to a json file
+jsonPatient = File.open('samplePatient1.json', 'w') { |patient|
+  patient << "{\n"
+  patient << '"resourceType": "Patient",' << "\n"
+  patient << '"text": {"status": "generated"},' << "\n"
+  patient << '"identifier": [{' << "\n" << '  "use": "usual",' << "\n"
+  patient << '  "system": "' << mockPatient.identifier[0].system << '",' << "\n"
+  patient << '  "value": "' << mockPatient.identifier[0].value << '",' << "\n"
+  patient << '  "period": {'  << "\n"
+  patient << '    "start": "' << mockPatient.identifier[0].period.start << '",' << "\n"
+  patient << '   },' << "\n"
+  patient << '  "assigner": {'  << "\n"
+  patient << '    "display": "' << mockPatient.identifier[0].assigner.display << '",' << "\n"
+  patient << '   },' << "\n"
+  patient << '"name": [{' << "\n" << '  "use": "official",' << "\n"
+  patient << '  "family": ' << mockPatientLastName[0] << ',' << "\n"
+  patient << '  "given": ' << mockPatientFirstName[0] << "\n" << '  }],' << "\n"
+  patient << '"telecom": [' << "\n"
+  patient << '  {' << "\n"
+  patient << '  "system": "phone",' << "\n"
+  patient << '  "value": "' << mockPatient.telecom[0].value << '",' << "\n"
+  patient << '  "use": "home"' << "\n"
+  patient << '  }],' << "\n"
+  patient << '"gender": {' << "\n"
+  patient << '  "coding": [' << "\n"
+  patient << '    {' << "\n"
+  patient << '    "system": "http://hl7.org/fhir/v3/AdministrativeGender",' << "\n"
+  patient << '    "code": "' << mockPatient.gender.coding[0].code << '",' << "\n"
+  patient << '    "display": "' << mockPatient.gender.coding[0].display << '",' << "\n"
+  patient << '    }' << "\n"
+  patient << '   ]' << "\n"
+  patient << '  },' << "\n"
+  patient << '"birthDate": "' << mockPatient.birthDate << '",' << "\n"
+  patient << '"deceasedBoolean": "' << mockPatient.deceasedBoolean << '",' << "\n"
+  patient << '"address": [' << "\n"
+  patient << '  {' << "\n"
+  patient << '    "use": "home",' << "\n"
+  patient << '    "line": ["' << mockPatient.address[0].line[0] << '"],' << "\n"
+  patient << '    "city": "' << mockPatient.address[0].city << '",' << "\n"
+  patient << '    "state": "' << mockPatient.address[0].state << '",' << "\n"
+  patient << '    "zip": "' << mockPatient.address[0].zip << '"' << "\n"
+  patient << '  }' << "\n"
+  patient << '],' << "\n"
+  patient << '"contact": [' << "\n"
+  patient << '  {' << "\n"
+  patient << '    "name": {' << "\n"
+  patient << '      "family": ' << mockPatient.contact[0].name.family << ',' << "\n"
+  patient << '      "given": ' << mockPatient.contact[0].name.given << "\n" << '  },' << "\n"
+  patient << '    "telecom": [{' << "\n"
+  patient << '      "system": "phone",' << "\n"
+  patient << '      "value": "' << mockPatient.contact[0].telecom[0].value << '"}]' << "\n"
+  patient << '  }],' << "\n"
+  patient << '"active": "' << mockPatient.active << '"' << "\n"
+  patient << "}\n"
+  }
+
+conditionFilePrinterCounter = 0
+until conditionFilePrinterCounter == allConditions.count
+conditionFilePrinterCounter += 1
+conditionPrinterCounter = conditionFilePrinterCounter - 1
+conditionFileNameVar = "sampleCondition" << conditionFilePrinterCounter.to_s << ".json"
+  jsonCondition = File.open(conditionFileNameVar, 'w') { |condition|
+    condition << "{\n"
+    condition << '"resourceType": "Condition",' << "\n"
+    condition << '"text": {"status": "generated"},' << "\n"
+    condition << '"subject": {"display": "' << mockPatientFirstName[0][0] << ' ' << mockPatientLastName[0][0] << '"},' << "\n"
+    condition << '"dateAsserted": {"' << allConditions[conditionPrinterCounter].dateAsserted << '"},' << "\n"
+    condition << '"code": {' << "\n"
+    condition << '  "coding": [{' << "\n"
+    condition << '    "system": "http://hl7.org/fhir/sid/icd-9",' << "\n"
+    condition << '    "code": "' << allConditions[conditionPrinterCounter].code.coding[0].code << '",' << "\n"
+    condition << '    "display": "' << allConditions[conditionPrinterCounter].code.coding[0].display << '"}],' << "\n"
+    condition << '  "text": "' << allConditions[conditionPrinterCounter].code.text << '"},'<< "\n"
+    condition << '"category": {' << "\n"
+    condition << '  "coding": [{' << "\n"
+    condition << '    "system": "http://hl7.org/fhir/condition-category",' << "\n"
+    condition << '    "code": "diagnosis",' << "\n"
+    condition << '    "display": "Diagnosis"}]},' << "\n"
+    condition << '"status": "confirmed",' << "\n"}
+
+    if allConditions[conditionPrinterCounter].abatementBoolean == true
+      jsonCondition = File.open(conditionFileNameVar, 'a') { |condition|
+        condition << '"abatementDate": "' << allConditions[conditionPrinterCounter].abatementDate << '"'}
+    end
+end
+
+medicationFilePrinterCounter = 0
+until medicationFilePrinterCounter == allMedications.count
+medicationFilePrinterCounter += 1
+medicationPrinterCounter = medicationFilePrinterCounter - 1
+medicationFileNameVar = "sampleMedication" << medicationFilePrinterCounter.to_s << ".json"
+  jsonMedication = File.open(medicationFileNameVar, 'w') { |medication|
+    medication << "{\n"
+    medication << '"resourceType": "Medication",' << "\n"
+    medication << '"text": {"status": "generated"},' << "\n"
+    medication << '"name": "' << allMedications[medicationPrinterCounter].name << '",' << "\n"
+    medication << '"code": {' << "\n"
+    medication << '  "coding": [{' << "\n"
+    medication << '    "system": "http://www.nlm.nih.gov/research/umls/rxnorm/",' << "\n"
+    medication << '    "code": "' << allMedications[medicationPrinterCounter].code.coding[0].code << '",' << "\n"
+    medication << '    "display": "' << allMedications[medicationPrinterCounter].code.coding[0].display << '"}]},' << "\n"
+    medication << '"isBrand": ' << allMedications[medicationPrinterCounter].isBrand << ',' << "\n"
+    medication << '"kind": "product",' << "\n"
+  }
+end
+
+medicationStatementFilePrinterCounter = 0
+until medicationStatementFilePrinterCounter == allMedicationStatements.count
+medicationStatementFilePrinterCounter += 1
+medicationStatementPrinterCounter = medicationStatementFilePrinterCounter - 1
+medicationStatementFileNameVar = "sampleMedicationStatement" << medicationStatementFilePrinterCounter.to_s << ".json"
+  jsonMedicationStatement = File.open(medicationStatementFileNameVar, 'w') { |medicationStatement|
+    medicationStatement << "{\n"
+    medicationStatement << '"resourceType": "MedicationStatement",' << "\n"
+    medicationStatement << '"text": {"status": "generated"},' << "\n"
+    medicationStatement << '"patient": {"display": "' << mockPatientFirstName[0][0] << ' ' << mockPatientLastName[0][0] << '"},' << "\n"
+    medicationStatement << '"medication": {"display": "' << allMedications[medicationStatementPrinterCounter].name << '"},' << "\n"
+    medicationStatement << '"whenGiven": {' << "\n"
+    medicationStatement << '  "start": "' << allMedicationStatements[medicationStatementPrinterCounter].whenGiven.start << '",' << "\n"
+    medicationStatement << '  "end": "' << allMedicationStatements[medicationStatementPrinterCounter].whenGiven.end << '"},' << "\n"
+    medicationStatement << '"dosage": [{' << "\n"
+    medicationStatement << '  "rate": {' << "\n"
+    medicationStatement << '    "numerator": {' << "\n"
+    medicationStatement << '      "value": ' << allMedicationStatements[medicationStatementPrinterCounter].dosage[0].rate.numerator.value<< ',' << "\n"
+    medicationStatement << '      "units": "' << allMedicationStatements[medicationStatementPrinterCounter].dosage[0].rate.numerator.units<< '"},' << "\n"
+    medicationStatement << '    "denominator": {' << "\n"
+    medicationStatement << '      "value": ' << allMedicationStatements[medicationStatementPrinterCounter].dosage[0].rate.denominator.value<< ',' << "\n"
+    medicationStatement << '      "units": "' << allMedicationStatements[medicationStatementPrinterCounter].dosage[0].rate.denominator.units<< '"}}}]' << "\n"
+    medicationStatement << '}'
+  }
+end
+
+encounterFilePrinterCounter = 0
+until encounterFilePrinterCounter == allEncounters.count
+encounterFilePrinterCounter += 1
+encounterPrinterCounter = encounterFilePrinterCounter - 1
+encounterFileNameVar = "sampleEncounter" << encounterFilePrinterCounter.to_s << ".json"
+  jsonEncounter = File.open(encounterFileNameVar, 'w') { |encounter|
+    encounter << "{\n"
+    encounter << '"resourceType": "Encounter",' << "\n"
+    encounter << '"text": {"status": "generated"},' << "\n"
+    encounter << '"patient": {"display": "' << mockPatientFirstName[0][0] << ' ' << mockPatientLastName[0][0] << '"},' << "\n"
+    encounter << '"status": "' << allEncounters[encounterPrinterCounter].status << '",' << "\n"
+    #insert class here
+    #insert type here
+    encounter << '"period": {' << "\n"
+    encounter << '  "start": "' << allEncounters[encounterPrinterCounter].period.start << '",' << "\n"
+    encounter << '  "end": "' << allEncounters[encounterPrinterCounter].period.end << '"},' << "\n"
+    encounter << '"reason": [{"text": "' << allEncounters[encounterPrinterCounter].reason.text << '"}],'
+    #insert serviceProvider: mockEncounter.serviceProvider = {"display" => "Medstar Health"}
+    #insert hospitalization: mockEncounter.hospitalization = {"reAdmission" => false}
+
+  }
+end
+
 
 binding.pry
 
